@@ -1,10 +1,10 @@
-import { Container } from 'reactstrap';
+import { Container } from "reactstrap";
 
-import Photos from '../Photos/Photos';
+import Photos from "../Photos/Photos";
 
-import './PhotosCatalog.scss';
-import { useSelector } from 'react-redux';
-import { getPhotos } from '../../../redux/photosRedux';
+import "./PhotosCatalog.scss";
+import { useSelector } from "react-redux";
+import { getPhotos } from "../../../redux/photosRedux";
 
 const PhotosCatalog = () => {
   const photos = useSelector(getPhotos);
@@ -17,6 +17,6 @@ const PhotosCatalog = () => {
       </Container>
     </section>
   );
-}
+};
 
-export default PhotosCatalog ;
+export default PhotosCatalog;

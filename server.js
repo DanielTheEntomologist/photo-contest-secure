@@ -6,6 +6,8 @@ const formidable = require("express-formidable");
 const uniqid = require("uniqid");
 const connectToDB = require("./db");
 
+const { getClientId } = require("./customMiddleware");
+
 // start express server
 const app = express();
 const server = app.listen(process.env.PORT || 8000, () => {
@@ -34,9 +36,12 @@ app.use(express.urlencoded({ extended: false }));
 // Serve static files from the React app
 app.use(express.static(path.join(__dirname, "/public")));
 app.use(express.static(path.join(__dirname, "/client/build")));
+// add custom middleware
+app.use(getClientId); // add client id detection
 
 // add photo routes
 app.use("/api", require("./routes/photos.routes"));
+app.use("/api", require("./routes/votes.routes"));
 
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname + "/client/build/index.html"));

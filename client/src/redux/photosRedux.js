@@ -12,7 +12,7 @@ export const getPhoto = ({ photos }, id) =>
 /* ACTIONS */
 
 // action name creator
-const reducerName = "concerts";
+const reducerName = "photos";
 const createActionName = (name) => `app/${reducerName}/${name}`;
 
 const START_REQUEST = createActionName("START_REQUEST");

@@ -1,4 +1,6 @@
 const Photo = require("../models/photo.model");
+// const Voter = require("../models/voter.model");
+const votesController = require("./votes.controller");
 
 function escapeHTML(str) {
   return str.replace(/[&<>"']/g, function (match) {
@@ -88,15 +90,38 @@ exports.loadAll = async (req, res) => {
 /****** VOTE FOR PHOTO ********/
 
 exports.vote = async (req, res) => {
+  const clientId = req.clientId;
+  const photoId = req.params.id;
+
+  console.log(clientId, "likes", photoId);
   try {
-    const photoToUpdate = await Photo.findOne({ _id: req.params.id });
-    if (!photoToUpdate) res.status(404).json({ message: "Not found" });
-    else {
+    const voteResult = await votesController.addVote(clientId, photoId);
+    if (voteResult === "already voted") {
+      res.status(400).json("already voted");
+    }
+    if (voteResult === "vote added") {
+      const photoToUpdate = await Photo.findOne({ _id: photoId });
       photoToUpdate.votes++;
-      photoToUpdate.save();
+      await photoToUpdate.save();
       res.send({ message: "OK" });
     }
+    if (!voteResult || voteResult === "error") {
+      res.status(500).json("error voting on photo");
+    }
   } catch (err) {
-    res.status(500).json(err);
+    res.status(500).json("error voting on photo");
   }
+
+  // updatePhotoVotes();
+  // try {
+  //   const photoToUpdate = await Photo.findOne({ _id: req.params.id });
+  //   if (!photoToUpdate) res.status(404).json({ message: "Not found" });
+  //   else {
+  //     photoToUpdate.votes++;
+  //     photoToUpdate.save();
+  //     res.send({ message: "OK" });
+  //   }
+  // } catch (err) {
+  //   res.status(500).json(err);
+  // }
 };
